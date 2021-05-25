@@ -14,6 +14,7 @@
 
 source ./common.sh
 
+docker volume inspect node_modules-vol || docker volume create node_modules-vol
 
 info "Using nodejs container $nodejs, $nodejs_host..."
 
@@ -21,6 +22,7 @@ info "Starting app client at port $dev_client_port..."
 docker run \
   -it \
   --mount "type=bind,source=${path},target=/opt/cypress-realworld-app,consistency=delegated" \
+  --mount "type=volume,source=node_modules-vol,target=/opt/cypress-realworld-app/node_modules" \
   --env TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling \
   --entrypoint=/bin/bash \
   node:14-stretch \
